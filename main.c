@@ -3,16 +3,13 @@
 #include <string.h>
 #include "projectlib.h"
 
-// array contenente i titoli dei libri
-// = {"libro1" , "libro2","libro3","libro4","libro5","libro6","libro7",
-// "libro8","libro9","libro10","libro11","libro12","libro13","libro14","libro15"};
 
 int main(){
 
     printf("\n dovrei inizializzare i libri \n");
     
-    libro **rad = (libro **)malloc(sizeof(libro));
-    initializeABRLibro(rad);
+    libro *rad = (libro *)malloc(sizeof(libro));
+    initializeABRLibro(&rad);
     
     visitaInPreordineLibro(rad);
 

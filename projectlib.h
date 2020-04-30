@@ -16,9 +16,9 @@ typedef struct nodoStudente {
 // Struttura nodi dell' ABR utilizzato per memorizzare i libri (nome come chiave principale)
 typedef struct nodoLibro{
         // il nome del libro come chiave principale del nodo dell'albero
-    char *nomeLibro;
+    char nomeLibro[10];
         //puntatore allo studente che ha attualmente il libro (NULL se disponibile in biblioteca)
-    studente *prestito;
+    struct nodoStudente *prestito;
         // puntatori al sottoalbero sinistro e destro     
     struct nodoLibro *sx;
     struct nodoLibro *dx;
@@ -39,6 +39,6 @@ void addNodoLibro(libro **rad, char *nome );
 void initializeABRLibro(libro **rad);
 
 // funzione visita in preordine ABR Libri
-void visitaInPreordineLibro(libro **rad);
+void visitaInPreordineLibro(libro *rad);
 
 #endif
