@@ -1,1 +1,40 @@
+il software è utilizzato dalla bibliotecaria
+
 richieste coda 
+gli elementi di questa coda possono essere di due tipi
+richiedere libro e restituire libro 
+ad ogni richiesta è associato 
+1)uno studente identificato da una matricola
+2)un libro identificato da un nome univoco
+
+quindi... una struct con un puntatore ad uno studente, un puntatore ad un libro
+e una flag di prestito o restituzione?
+
+la coda è formata quindi da un array di queste struct 
+struct request {
+    flag
+    puntatore studente
+    puntatore libro
+}
+
+struct studente {
+    matricola
+    --eventuali
+} 
+
+struct libro {
+    nome
+
+}
+
+entrano nella coda in ordine di richiesta
+quando la segreteria gestisce le richieste lo fa nell ordine della coda,
+se può essere soddisfatta la effettua e passa al successivo,
+se non può essere soddisfatta 
+    -o perché il libro richiesto non è presente in libreria
+    -o perché il libro richiesto è stato già prestato
+    -o perché il libro restituito non fa parte di quella libreria
+    
+    nel primo e terzo caso siccome non è di competenza della libreria viene cancellata definitivamente 
+    nel secondo // attendo la risposta chiesta sul gruppo
+    
