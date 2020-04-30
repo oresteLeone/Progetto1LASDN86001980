@@ -9,8 +9,11 @@ int main(){
     printf("\n dovrei inizializzare i libri \n");
     
     libro *rad = (libro *)malloc(sizeof(libro));
+    // inizializzo l'albero con la funzione initialize passando come argomento &rad poiché
+    // l'inserimento ricorsivo utilizza il doppio puntatore
     initializeABRLibro(&rad);
     
+    // qui uso il puntatore singolo e quindi passo rad
     visitaInPreordineLibro(rad);
 
     int canIclose=0;
