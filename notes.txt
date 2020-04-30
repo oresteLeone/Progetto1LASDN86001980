@@ -17,12 +17,12 @@ struct request {
     puntatore libro
 }
 
-struct studente {
+struct studente { DA FARE COME ALBERO
     matricola
     --eventuali
 } 
 
-struct libro {
+struct libro { DA FARE COME ALBERO perché si ottimizza la ricerca
     nome
 
 }
@@ -31,10 +31,10 @@ entrano nella coda in ordine di richiesta
 quando la segreteria gestisce le richieste lo fa nell ordine della coda,
 se può essere soddisfatta la effettua e passa al successivo,
 se non può essere soddisfatta 
-    -o perché il libro richiesto non è presente in libreria
+    -o perché il libro richiesto non è presente in libreria /// NO
     -o perché il libro richiesto è stato già prestato
-    -o perché il libro restituito non fa parte di quella libreria
+    -o perché il libro restituito non fa parte di quella libreria ///NO
     
-    nel primo e terzo caso siccome non è di competenza della libreria viene cancellata definitivamente 
-    nel secondo // attendo la risposta chiesta sul gruppo
-    
+  non sono possibili i casi 1 e 3 , il programma non trovando il libro non fa avanzare la richiesta
+  e non la mette nella coda
+  
