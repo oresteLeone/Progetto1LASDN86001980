@@ -6,7 +6,7 @@
 // funzione di inserimento nodo nell'ABR libri
 void addNodoLibro(libro **rad, char *nome ){
     printf("\nsto per aggiungere il nodo %s",nome);
-    libro *aux=NULL;
+    libro *aux;
     if(!(*rad)){
         printf("\nrad è nullo");
             aux=(libro *)malloc(sizeof(libro));
