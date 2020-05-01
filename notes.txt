@@ -38,3 +38,14 @@ se non può essere soddisfatta
   non sono possibili i casi 1 e 3 , il programma non trovando il libro non fa avanzare la richiesta
   e non la mette nella coda
   
+1 maggio
+sono riuscito a creare l'albero dei libri, bisognerebbe però ottimizzarlo
+ergo cercare il bilanciamento dell'albero
+
+andando avanti con le cose base devo iniziare la struttura per gestire le richieste
+deve essere gestita in ordine in cui viene riempita, quindi la coda sembra adeguata
+
+l'array non va bene, dovrò implementare la coda come una lista singolarmente puntata circolare
+con le politiche della coda
+
+uno studente può prendere solo un libro alla volta

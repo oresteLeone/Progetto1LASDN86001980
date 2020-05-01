@@ -8,15 +8,21 @@ int main(){
 
     printf("\n dovrei inizializzare i libri \n");
     
-    libro *rad = (libro *)malloc(sizeof(libro));
+    libro *radLibro = (libro *)malloc(sizeof(libro));
     // inizializzo l'albero con la funzione initialize passando come argomento &rad poiché
     // l'inserimento ricorsivo utilizza il doppio puntatore
-    initializeABRLibro(&rad);
+    initializeABRLibro(&radLibro);
     
     // qui uso il puntatore singolo e quindi passo rad
-    visitaInPreordineLibro(rad);
+    visitaInPreordineLibro(radLibro);
 
-    int canIclose=0;
+    queue *coda=NULL;
+    initializeQueue(coda);
+
+    studente *radStudente = (studente *)malloc(sizeof(studente));
+
+    
+    int canIclose=0; // rappresenta il numero di richieste presenti nella coda
     int choice=-1;
     do{
         printf("\n1. Aggiungere una richiesta ");
@@ -33,11 +39,13 @@ int main(){
 
         switch(choice){
             case 1:
-                printf("\n Aggiungere una richiesta (aggiunta una)\n");
+                printf("\n Aggiungere una richiesta (chiamo catch request\n");
+                catchRequest(&radStudente,&radLibro,coda);
                 canIclose++;                
                 break;
             case 2:
                 printf("\n Gestire le richieste (gestita una)\n");
+
                 canIclose--;
                 break;
             case 0:

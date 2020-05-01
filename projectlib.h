@@ -1,14 +1,13 @@
 #ifndef projectlib
 #define projectlib
 #define maxlibri 15     //numero massimo libri 
-#define maxrichieste 25 //numero massimo coda richieste 
-
+#define maxstring 20
 
 
 // Struttura nodi dell' ABR utilizzato per memorizzare gli studenti(matricola come chiave principale)
 typedef struct nodoStudente {
     int matricola;
-    char *nomeStudente;
+    char nomeStudente[maxstring];
     struct nodoStudente *sx;
     struct nodoStudente *dx;
 } studente;
@@ -16,21 +15,28 @@ typedef struct nodoStudente {
 // Struttura nodi dell' ABR utilizzato per memorizzare i libri (nome come chiave principale)
 typedef struct nodoLibro{
         // il nome del libro come chiave principale del nodo dell'albero
-    char nomeLibro[10];
+    char nomeLibro[maxstring];
         //puntatore allo studente che ha attualmente il libro (NULL se disponibile in biblioteca)
-    struct nodoStudente *prestito;
+    studente *prestito;
         // puntatori al sottoalbero sinistro e destro     
     struct nodoLibro *sx;
     struct nodoLibro *dx;
 } libro;
 
-typedef struct richiesta{
-    char *tipo;
+typedef struct richiesta_libro{
+    char tipo[maxstring];
     studente *richiedente;
     libro *oggetto;
+    struct richiesta_libro *next;
 } richiesta;
 
-richiesta Q[maxrichieste+2];
+typedef struct queue_richieste{
+    richiesta *head;
+    richiesta *tail;
+} queue;
+
+
+void addNodoStudente(studente **rad, int matr, char *nome );
 
 // funzione di inserimento nodo nell'ABR libri
 void addNodoLibro(libro **rad, char *nome );
@@ -41,4 +47,25 @@ void initializeABRLibro(libro **rad);
 // funzione visita in preordine ABR Libri
 void visitaInPreordineLibro(libro *rad);
 
+// funzione ricerca libro con restituzione int
+int ricercaLibro(libro *rad,char *nome);
+
+// funzione ricerca studente con restituzione int
+int ricercaStudente(studente *rad, int matr);
+
+// funzione ricerca libro con restituzione puntatore
+libro *referenceLibro(libro *rad,char *nome);
+
+// funzione ricerca studente con restituzione puntatore
+studente *referenceStudente(studente *rad, int matr);
+
+// inizializzazione coda
+void initializeQueue(queue *coda);
+
+// creazione richiesta
+richiesta *addNodoRichiesta(char *tipo, studente *matricola, libro *oggetto );
+
+void catchRequest(studente **radStudente,libro **radLibro, queue *coda);
+
+void enqueue(queue *coda,richiesta *nodo);
 #endif
