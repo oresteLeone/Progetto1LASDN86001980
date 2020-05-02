@@ -72,7 +72,8 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda);
 void enQueue(queue *coda,richiesta *nodo);
 
 // funzione gestione richieste
-void tryRequest(queue *coda);
+void tryRequest(queue *coda,studente **radStudente);
+
 // funzione che rimuove una richiesta dalla coda
 richiesta *deQueue(queue *coda);
 

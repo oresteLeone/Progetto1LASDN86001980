@@ -234,7 +234,7 @@ int emptyQueue(queue *coda){
     return coda->head==NULL;
 }
 // funzione gestione richieste
-void tryRequest(queue *coda){
+void tryRequest(queue *coda,studente **radStudente){
     richiesta *tmp=NULL;
     if(strcmp(coda->head->tipo,"prestito")==0){
         if(coda->head->oggetto->prestito==NULL){
@@ -258,6 +258,8 @@ void tryRequest(queue *coda){
         }
         
     }else{
+        tmp=deQueue(coda);
+        tmp->oggetto->prestito=NULL;
 
     }
     free(tmp);
@@ -265,5 +267,15 @@ void tryRequest(queue *coda){
 
 // funzione che rimuove una richiesta dalla coda
 richiesta *deQueue(queue *coda){
-    
+    richiesta *tmp=NULL;
+    if(coda->head==coda->tail){
+        tmp=coda->head;
+        coda->head=NULL;
+        coda->tail=NULL;
+    }else{
+        tmp=coda->head;
+        coda->head=coda->head->next;
+        coda->tail->next=coda->head;
+    }
+    return tmp;    
 }

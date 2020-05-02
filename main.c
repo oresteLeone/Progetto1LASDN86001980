@@ -46,10 +46,16 @@ int main(){
             case 2:
                 printf("\n Gestire le richieste \n");
                 if(!emptyQueue(coda)){
-                    tryRequest(coda);
+                    printf("\nCoda prima della gestione : ");
                     printQueue(coda);
+                    tryRequest(coda,&radStudente);
+                    printf("\nCoda dopo della gestione : ");
+                    if(!emptyQueue(coda)) 
+                        printQueue(coda);
+                    else printf("\n VUOTA!");
                 }else 
                     printf("\n Non ci sono richieste!");
+                
                 break;
             case 0:
                 canIclose=emptyQueue(coda);
