@@ -65,7 +65,14 @@ void initializeQueue(queue *coda);
 // creazione richiesta
 richiesta *addNodoRichiesta(char *tipo, studente *matricola, libro *oggetto );
 
+// funzione per l'impacchettamento e accodamento della richiesta
 void catchRequest(studente **radStudente,libro **radLibro, queue *coda);
 
+// funzione per l'accodamento della coda di richieste
 void enqueue(queue *coda,richiesta *nodo);
+
+// funzione per la stampa della coda
+void printQueue(queue *coda);
+
+int emptyQueue(queue *coda);
 #endif

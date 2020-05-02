@@ -49,3 +49,6 @@ l'array non va bene, dovrò implementare la coda come una lista singolarmente pu
 con le politiche della coda
 
 uno studente può prendere solo un libro alla volta
+
+2 maggio
+finalmente funziona tutto, devo aggiungere il decodamento e pulire il codice e migliorarlo

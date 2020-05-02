@@ -43,7 +43,7 @@ void initializeABRLibro(libro **rad){
     char stringabase[maxstring];
     for(i=0;i<maxlibri;i++){
         int c=i+1;
-        sprintf(stringabase,"%s%2d","libro",c);
+        sprintf(stringabase,"%s%d","libro",c);
         addNodoLibro(rad,stringabase);
     }
     
@@ -89,7 +89,7 @@ int ricercaStudente(studente *rad, int matr){
 
 // funzione ricerca libro con restituzione puntatore
 libro *referenceLibro(libro *rad,char *nome){
-    studente *ref=NULL;
+    libro *ref=NULL;
     if(rad){
         if(strcmp(rad->nomeLibro,nome)==0){
             ref=rad;
@@ -122,11 +122,8 @@ studente *referenceStudente(studente *rad, int matr){
 
 // inizializzazione coda
 void initializeQueue(queue *coda){
-    coda = (queue *)malloc(sizeof(queue));
-    if(coda){
         coda->head=NULL;
         coda->tail=NULL;
-    }else   printf("\n Errore in allocazione coda!\n");
 }
 
 
@@ -141,9 +138,10 @@ richiesta *addNodoRichiesta(char *tipo, studente *matricola, libro *oggetto ){
     }else printf("\n Errore in allocazione Richiesta!");
     return temp;
 }
+
+// funzione per l'impacchettamento e accodamento della richiesta
 void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
     int caso =-1;
-    int greenlight=0;
     char tipo[maxstring];
     int matr;
     char nomeStudente[maxstring];
@@ -153,8 +151,8 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
     printf("\nInserisci tipo richiesta (1.Prestito//0.Restituzione) ");
     do{
         scanf("%d",&caso);
-            if(caso!=1 || caso !=0)     printf("\nPerfavore, inserisci 1 o 0; ");
-    }while(caso!=1 || caso !=0);
+            if(caso!=1 && caso !=0)     printf("\nPerfavore, inserisci 1 o 0; ");
+    }while(caso!=1 && caso !=0);
     if(caso){
         strcpy(tipo,"prestito");
         printf("\nInserisci generalità studente ");
@@ -163,7 +161,7 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
         scanf("%s",nomeStudente);
         printf("\nMatricola: ");
         scanf("%d",&matr);
-        foundStud=ricercaStudente(radStudente,matr);
+        foundStud=ricercaStudente(*radStudente,matr);
         if(foundStud){
             printf("\nLo studente ha già fatto una richiesta di prestito,non è consentito effettuarne un altra...\toperazione annullata");
             exit(-1);
@@ -171,7 +169,7 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
 
         printf("\nInserisci nome libro richiesto in prestito: ");
         scanf("%s",nomeObj);
-        foundLib=ricercaLibro(radLibro,nomeObj);
+        foundLib=ricercaLibro(*radLibro,nomeObj);
         if(foundLib){
             printf("\nElaborazione dati e inserimento richiesta");
             addNodoStudente(radStudente,matr,nomeStudente);
@@ -184,24 +182,53 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
         strcpy(tipo,"restituzione");
         printf("\nInserisci nome libro da restituire: ");
         scanf("%s",nomeObj);
-        foundLib=ricercaLibro(radLibro,nomeObj);
+        foundLib=ricercaLibro(*radLibro,nomeObj);
         if(!foundLib){
             printf("\nIl libro presentato non è presente in catalogo...\toperazione annullata");
             exit(-1);
-        }//else if(REFLIB(nomeObj)->prestito != NULL){
-        // printf("\nAbbiamo già un libro con quel nome, quello presentato apparterrà ad altri...\toperazione annullata");
-        //    exit(-1);
-       // }
+        }else 
+            printf("\nElaborazione dati e inserimento richiesta");
+            
+             
 
-    }// richiesta *request=addNodoRichiesta(tipo,REFSTUD(matr), REFLIB(nomeObj));
-            // REFLIB(nomeObj)->prestito=REFSTUD(matr); per cambiare lo stato del prestito NO QUESTO LO DEVE FARE NEL DEQUEUE
-            // enqueue(coda, request);
+    }
+    libro *refLib=referenceLibro(*radLibro,nomeObj);
+    studente *refStud=referenceStudente(*radStudente,matr);
+    if(strcmp(tipo,"restituzione")==0){
+        if(refLib->prestito==NULL){
+        printf("\nAbbiamo già un libro con quel nome, quello presentato apparterrà ad altri...\toperazione annullata");
+        exit(-1);}
+        }
 
+    richiesta *request=addNodoRichiesta(tipo,refStud, refLib);
+    enqueue(coda, request);
 
 }
 
-
+// funzione per l'accodamento della coda di richieste
 void enqueue(queue *coda,richiesta *nodo){
+    if(coda->head==NULL)
+        coda->head=nodo;
+    else 
+        coda->tail->next=nodo;
+    
+    coda->tail=nodo;
+    coda->tail->next=coda->head;
+    
+}
 
 
+// funzione iterativa per la stampa della coda
+void printQueue(queue *coda){
+    richiesta *temp = coda->head;
+    printf("\n Coda richieste:\n");
+    while(temp->next!=coda->head){
+        printf("%s\t%d\t%s\n",temp->tipo,temp->richiedente->matricola,temp->oggetto->nomeLibro);
+        temp=temp->next;
+    }
+    printf("%s\t%d\t%s\n",temp->tipo,temp->richiedente->matricola,temp->oggetto->nomeLibro);
+}
+
+int emptyQueue(queue *coda){
+    return coda->head==NULL;
 }

@@ -16,13 +16,13 @@ int main(){
     // qui uso il puntatore singolo e quindi passo rad
     visitaInPreordineLibro(radLibro);
 
-    queue *coda=NULL;
+    queue *coda=(queue *)malloc(sizeof(queue));
     initializeQueue(coda);
 
     studente *radStudente = (studente *)malloc(sizeof(studente));
 
     
-    int canIclose=0; // rappresenta il numero di richieste presenti nella coda
+    int canIclose=1; // flag presenza richieste
     int choice=-1;
     do{
         printf("\n1. Aggiungere una richiesta ");
@@ -41,23 +41,24 @@ int main(){
             case 1:
                 printf("\n Aggiungere una richiesta (chiamo catch request\n");
                 catchRequest(&radStudente,&radLibro,coda);
-                canIclose++;                
+                               
                 break;
             case 2:
-                printf("\n Gestire le richieste (gestita una)\n");
+                printf("\n Gestire le richieste (per ora stampa solo)\n");
+                printQueue(coda);
 
-                canIclose--;
                 break;
             case 0:
-                if(canIclose==0)
+                canIclose=emptyQueue(coda);
+                if(canIclose)
                     printf("\n Arrivederci \n");
                 else
-                    printf("\n ci sono %d richieste in sospeso da gestire! \n",canIclose);
+                    printf("\n ci sono richieste in sospeso da gestire! \n");
                 
             break;
         }
 
-    }while( choice!=0 || canIclose!=0 );
+    }while( choice!=0 || canIclose!=1 );
 
         
     return 0; 
