@@ -164,19 +164,19 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
         foundStud=ricercaStudente(*radStudente,matr);
         if(foundStud){
             printf("\nLo studente ha già fatto una richiesta di prestito,non è consentito effettuarne un altra...\toperazione annullata");
-            exit(-1);
+            return; // funzione gestioni errori?
         }
 
         printf("\nInserisci nome libro richiesto in prestito: ");
         scanf("%s",nomeObj);
         foundLib=ricercaLibro(*radLibro,nomeObj);
         if(foundLib){
-            printf("\nElaborazione dati e inserimento richiesta");
+            printf("\nElaborazione dati ");
             addNodoStudente(radStudente,matr,nomeStudente);
             
         }else{
             printf("\nIl libro richiesto non è presente in catalogo...\toperazione annullata");
-            exit(-1);
+            return; // funzione gestione errori?
         }
     }else{
         strcpy(tipo,"restituzione");
@@ -185,9 +185,9 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
         foundLib=ricercaLibro(*radLibro,nomeObj);
         if(!foundLib){
             printf("\nIl libro presentato non è presente in catalogo...\toperazione annullata");
-            exit(-1);
+            return; // funzione gestione errori?
         }else 
-            printf("\nElaborazione dati e inserimento richiesta");
+            printf("\nElaborazione dati ");
             
              
 
@@ -196,17 +196,18 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
     studente *refStud=referenceStudente(*radStudente,matr);
     if(strcmp(tipo,"restituzione")==0){
         if(refLib->prestito==NULL){
-        printf("\nAbbiamo già un libro con quel nome, quello presentato apparterrà ad altri...\toperazione annullata");
-        exit(-1);}
+            printf("\nAbbiamo già un libro con quel nome, quello presentato apparterrà ad altri...\toperazione annullata");
+            return;} // funzione gestione errori?
         }
 
     richiesta *request=addNodoRichiesta(tipo,refStud, refLib);
-    enqueue(coda, request);
+    enQueue(coda, request);
+    printf("\n Operazione effettuata con successo! Gestiremo la richiesta il prima possibile...\n");
 
 }
 
 // funzione per l'accodamento della coda di richieste
-void enqueue(queue *coda,richiesta *nodo){
+void enQueue(queue *coda,richiesta *nodo){
     if(coda->head==NULL)
         coda->head=nodo;
     else 
@@ -231,4 +232,38 @@ void printQueue(queue *coda){
 
 int emptyQueue(queue *coda){
     return coda->head==NULL;
+}
+// funzione gestione richieste
+void tryRequest(queue *coda){
+    richiesta *tmp=NULL;
+    if(strcmp(coda->head->tipo,"prestito")==0){
+        if(coda->head->oggetto->prestito==NULL){
+            coda->head->oggetto->prestito=coda->head->richiedente;
+            tmp=deQueue(coda);
+        }else{
+            printf("\nIl libro è stato già dato in prestito alla matricola %d... ",coda->head->richiedente->matricola);
+            printf("\nLo studente desidera attendere che sia nuovamente disponibile?(1.SI 0.NO): ");
+            int chc=-1;
+            do{
+                scanf("%d",&chc);
+                if(chc!=1 && chc !=0)     printf("\nPerfavore, inserisci 1 o 0; ");
+            }while(chc!=1 && chc !=0);
+            tmp=deQueue(coda);
+            if(chc){
+                enQueue(coda,tmp);
+            }else{
+                // eliminaABRStudente(radStudente,tmp->richiedente);
+                
+            }
+        }
+        
+    }else{
+
+    }
+    free(tmp);
+}
+
+// funzione che rimuove una richiesta dalla coda
+richiesta *deQueue(queue *coda){
+    
 }

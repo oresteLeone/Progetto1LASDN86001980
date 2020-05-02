@@ -69,10 +69,16 @@ richiesta *addNodoRichiesta(char *tipo, studente *matricola, libro *oggetto );
 void catchRequest(studente **radStudente,libro **radLibro, queue *coda);
 
 // funzione per l'accodamento della coda di richieste
-void enqueue(queue *coda,richiesta *nodo);
+void enQueue(queue *coda,richiesta *nodo);
+
+// funzione gestione richieste
+void tryRequest(queue *coda);
+// funzione che rimuove una richiesta dalla coda
+richiesta *deQueue(queue *coda);
 
 // funzione per la stampa della coda
 void printQueue(queue *coda);
 
 int emptyQueue(queue *coda);
+
 #endif

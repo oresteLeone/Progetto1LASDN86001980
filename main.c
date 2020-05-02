@@ -44,9 +44,12 @@ int main(){
                                
                 break;
             case 2:
-                printf("\n Gestire le richieste (per ora stampa solo)\n");
-                printQueue(coda);
-
+                printf("\n Gestire le richieste \n");
+                if(!emptyQueue(coda)){
+                    tryRequest(coda);
+                    printQueue(coda);
+                }else 
+                    printf("\n Non ci sono richieste!");
                 break;
             case 0:
                 canIclose=emptyQueue(coda);
