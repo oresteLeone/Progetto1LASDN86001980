@@ -35,8 +35,14 @@ typedef struct queue_richieste{
     richiesta *tail;
 } queue;
 
-
+// funzione per aggiungere un nodo studente all'ABR dei studenti
 void addNodoStudente(studente **rad, int matr, char *nome );
+
+// funzione di ricerca per trovare il minimo nodo di un albero
+int ricercaMinABRStudente(studente *rad);
+
+// funzione per eliminare un nodo con una certa matricola dall'ABR studenti 
+void eliminaNodoABRStudente(studente **rad,int matr);
 
 // funzione di inserimento nodo nell'ABR libri
 void addNodoLibro(libro **rad, char *nome );
@@ -80,6 +86,7 @@ richiesta *deQueue(queue *coda);
 // funzione per la stampa della coda
 void printQueue(queue *coda);
 
+// funzione che restituisce se la coda è vuota
 int emptyQueue(queue *coda);
 
 #endif

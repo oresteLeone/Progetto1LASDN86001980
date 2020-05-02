@@ -3,6 +3,7 @@
 #include <string.h>
 #include "projectlib.h"
 
+// funzione per aggiungere un nodo studente all'ABR dei studenti
 void addNodoStudente(studente **rad,int matr, char *nome ){
     //se la radice è vuota creo il nodo e lo imposto come radice
     if(!(*rad)){
@@ -19,6 +20,52 @@ void addNodoStudente(studente **rad,int matr, char *nome ){
      else if ((*rad)->matricola > matr){       // se la matricola in radice è più grande di matr
             addNodoStudente(&(*rad)->sx , matr,nome);}          // vado nel sottoalbero sinistro
 }
+
+// funzione di ricerca per trovare il minimo nodo di un albero
+int ricercaMinABRStudente(studente *rad){
+    
+    int min=0;
+    if(rad){
+        if(rad->sx==NULL)
+            min=rad->matricola;
+        else 
+            min=ricercaMinABRStudente(rad->sx);
+        
+    }
+    return min;
+}
+
+// funzione per eliminare un nodo con una certa matricola dall'ABR studenti 
+void eliminaNodoABRStudente(studente **rad,int matr){
+    studente *aux;
+    aux=*rad;
+    if(*rad){
+        if((*rad)->matricola > matr){
+            eliminaNodoABRStudente(&(*rad)->sx,matr);} // CERCA A SINISTRA
+        else if ((*rad)->matricola < matr){
+            eliminaNodoABRStudente(&(*rad)->dx,matr);} // CERCA A DESTRA
+        else{ // ELEMENTO TROVATO
+            if(!((*rad)->sx) && !((*rad)->dx)){
+                free(*rad);
+                *rad=NULL;
+            }
+            else if( ((*rad)->sx) && (!((*rad)->dx)) ){ //se dx è vuoto
+                *rad=aux->sx;}
+            else if( (!((*rad)->sx)) && ((*rad)->dx) ){ // se sx è vuoto
+                *rad=aux->dx;}
+            else if((aux->dx==NULL) || (aux->sx==NULL) ){
+                free(aux);
+                return;
+            }
+            else if ( ((*rad)->sx) && ((*rad)->dx) ){ // se sx e dx non vuoti
+                (*rad)->matricola=ricercaMinABRStudente((*rad)->dx);
+                eliminaNodoABRStudente(&(*rad)->dx,(*rad)->matricola);
+            }  
+        }
+    }
+}
+
+
 // funzione di inserimento nodo nell'ABR libri
 void addNodoLibro(libro **rad, char *nome ){
     //se la radice è vuota creo il nodo e lo imposto come radice
@@ -193,14 +240,19 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
 
     }
     libro *refLib=referenceLibro(*radLibro,nomeObj);
-    studente *refStud=referenceStudente(*radStudente,matr);
+    studente *refStud=NULL;
     if(strcmp(tipo,"restituzione")==0){
         if(refLib->prestito==NULL){
             printf("\nAbbiamo già un libro con quel nome, quello presentato apparterrà ad altri...\toperazione annullata");
-            return;} // funzione gestione errori?
-        }
+            return;
+            }else {
+                refStud=referenceStudente(*radStudente,refLib->prestito->matricola);
+            } 
+    }else {
+        refStud=referenceStudente(*radStudente,matr);
+    }
 
-    richiesta *request=addNodoRichiesta(tipo,refStud, refLib);
+    richiesta *request=addNodoRichiesta(tipo, refStud , refLib);    
     enQueue(coda, request);
     printf("\n Operazione effettuata con successo! Gestiremo la richiesta il prima possibile...\n");
 
@@ -230,9 +282,11 @@ void printQueue(queue *coda){
     printf("%s\t%d\t%s\n",temp->tipo,temp->richiedente->matricola,temp->oggetto->nomeLibro);
 }
 
+// funzione che restituisce se la coda è vuota
 int emptyQueue(queue *coda){
     return coda->head==NULL;
 }
+
 // funzione gestione richieste
 void tryRequest(queue *coda,studente **radStudente){
     richiesta *tmp=NULL;
@@ -241,7 +295,7 @@ void tryRequest(queue *coda,studente **radStudente){
             coda->head->oggetto->prestito=coda->head->richiedente;
             tmp=deQueue(coda);
         }else{
-            printf("\nIl libro è stato già dato in prestito alla matricola %d... ",coda->head->richiedente->matricola);
+            printf("\nIl libro è stato già dato in prestito alla matricola %d... ",coda->head->oggetto->prestito->matricola);
             printf("\nLo studente desidera attendere che sia nuovamente disponibile?(1.SI 0.NO): ");
             int chc=-1;
             do{
@@ -249,10 +303,10 @@ void tryRequest(queue *coda,studente **radStudente){
                 if(chc!=1 && chc !=0)     printf("\nPerfavore, inserisci 1 o 0; ");
             }while(chc!=1 && chc !=0);
             tmp=deQueue(coda);
-            if(chc){
+            if(chc==1){
                 enQueue(coda,tmp);
-            }else{
-                // eliminaABRStudente(radStudente,tmp->richiedente);
+            }else if(chc==0){
+                eliminaNodoABRStudente(radStudente,tmp->richiedente->matricola);
                 
             }
         }
@@ -260,9 +314,9 @@ void tryRequest(queue *coda,studente **radStudente){
     }else{
         tmp=deQueue(coda);
         tmp->oggetto->prestito=NULL;
+        eliminaNodoABRStudente(radStudente,tmp->richiedente->matricola);
 
     }
-    free(tmp);
 }
 
 // funzione che rimuove una richiesta dalla coda

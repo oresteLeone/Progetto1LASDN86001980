@@ -20,6 +20,7 @@ int main(){
     initializeQueue(coda);
 
     studente *radStudente = (studente *)malloc(sizeof(studente));
+    radStudente=NULL;
 
     
     int canIclose=1; // flag presenza richieste
