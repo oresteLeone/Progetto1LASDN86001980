@@ -91,9 +91,12 @@ void tryRequest(queue *coda,studente **radStudente);
 richiesta *deQueue(queue *coda);
 
 // funzione per la stampa della coda
-void printQueue(queue *coda);
+void printQueue(queue *coda, richiesta *request);
 
 // funzione che restituisce se la coda è vuota
 int emptyQueue(queue *coda);
+
+// funzione che restituisce la lunghezza della coda
+int lenghtQueue(queue *coda,richiesta *request);
 
 #endif

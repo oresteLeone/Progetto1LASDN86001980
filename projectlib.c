@@ -322,20 +322,37 @@ void enQueue(queue *coda,richiesta *nodo){
 }
 
 
-// funzione iterativa per la stampa della coda
-void printQueue(queue *coda){
-    richiesta *temp = coda->head;
-    printf("\n\tCoda richieste:\n");
-    while(temp->next!=coda->head){
-        printf("%s\t%d\t%s\n",temp->tipo,temp->richiedente->matricola,temp->oggetto->nomeLibro);
-        temp=temp->next;
-    }
-    printf("%s\t%d\t%s\n",temp->tipo,temp->richiedente->matricola,temp->oggetto->nomeLibro);
+// funzione ricorsiva per la stampa della coda
+void printQueue(queue *coda,richiesta *request){
+   if(!emptyQueue(coda)){
+        if(request->next!=coda->head){
+            printf("%s\t%d\t%s\n",request->tipo,request->richiedente->matricola,request->oggetto->nomeLibro);
+            printQueue(coda,request->next);
+        }else
+            printf("%s\t%d\t%s\n",request->tipo,request->richiedente->matricola,request->oggetto->nomeLibro);
+   }
 }
 
 // funzione che restituisce se la coda è vuota
 int emptyQueue(queue *coda){
     return coda->head==NULL;
+}
+
+// funzione che restituisce la lunghezza della coda
+int lenghtQueue(queue *coda,richiesta *request){
+    int count=0;
+    if(!emptyQueue(coda)){
+        if(request->next!=coda->head)
+            count=lenghtQueue(coda,request->next);
+        count++;
+        //richiesta *temp = coda->head;
+        //while(temp->next!=coda->head){
+        //        count++;
+        //        temp=temp->next;
+       // }
+       // count++;
+    }
+    return count;
 }
 
 // funzione gestione richieste
@@ -346,7 +363,7 @@ void tryRequest(queue *coda,studente **radStudente){
             coda->head->oggetto->prestito=coda->head->richiedente;
             tmp=deQueue(coda);
         }else{
-            printf("\nIl libro è stato già dato in prestito alla matricola %d... ",coda->head->oggetto->prestito->matricola);
+            printf("\nIl libro %s è stato già dato in prestito alla matricola %d... ",coda->head->oggetto->nomeLibro,coda->head->oggetto->prestito->matricola);
             printf("\nLo studente desidera attendere che sia nuovamente disponibile?(1.SI 0.NO): ");
             int chc=-1;
             do{

@@ -31,13 +31,14 @@ int main(){
     int sospese=1;
     int canIclose=0; // flag d'uscita
     int choice=-1;
-    
+    int lenghtCoda=0;
+
     // menu interattivo
     do{
         printf("\n1. Aggiungere una richiesta ");
-        printf("\n2. Gestire le richieste ");
+        printf("\n2. Gestire le richieste (%d)",lenghtCoda=lenghtQueue(coda,coda->head));
         printf("\n3. Stampa catalogo libri ");
-        printf("\n4. Stampa libri attualmente in prestito ");
+        printf("\n4. Stampa libri attualmente in prestito (%d) ",prestiti=nPrestiti(radLibro));
         printf("\n0. Terminare ");
         printf("\n input: ");
             do{
@@ -57,12 +58,12 @@ int main(){
             case 2:
                 printf("\n\tGestire le richieste: \n");
                 if(!emptyQueue(coda)){
-                    printf("\nCoda prima della gestione : ");
-                    printQueue(coda);
+                    printf("\nCoda prima della gestione : \n");
+                    printQueue(coda,coda->head);
                     tryRequest(coda,&radStudente);
-                    printf("\nCoda dopo la gestione : ");
+                    printf("\nCoda dopo la gestione : \n");
                     if(!emptyQueue(coda)) 
-                        printQueue(coda);
+                        printQueue(coda,coda->head);
                     else 
                         printf("\nNon ci sono ulteriori richieste!\n");
                 }else 
@@ -80,7 +81,7 @@ int main(){
                 printf("\nLibri attualmente in prestito: %d \n",prestiti=nPrestiti(radLibro));
                 visitaInPreordineLibroInPrestito(radLibro);
                 printf("\n***Fine Elenco***\n");
-                
+
                 break;
             case 0:
                 sospese=emptyQueue(coda);
