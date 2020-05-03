@@ -87,11 +87,42 @@ void addNodoLibro(libro **rad, char *nome ){
 // funzione inizializzazione ABR libri
 void initializeABRLibro(libro **rad){
     int i=0;
-    char stringabase[maxstring];
+    // char stringabase[maxstring];
     for(i=0;i<maxlibri;i++){
-        int c=i+1;
-        sprintf(stringabase,"%s%d","libro",c);
-        addNodoLibro(rad,stringabase);
+        if(i==0) 
+                addNodoLibro(rad,"harry_potter");
+        else if(i==1) 
+                addNodoLibro(rad,"il_signore_degli_anelli");
+        else if(i==2) 
+                addNodoLibro(rad,"il_silmarillion");
+        else if(i==3)
+                addNodoLibro(rad,"guerra_e_pace");
+        else if(i==4) 
+                addNodoLibro(rad,"uno_nessuno_e_centomila");
+        else if(i==5) 
+                addNodoLibro(rad,"1984");
+        else if(i==6) 
+                addNodoLibro(rad,"orgoglio_e_pregiudizio");
+        else if(i==7) 
+                addNodoLibro(rad,"moby_dick");
+        else if(i==8)
+                addNodoLibro(rad,"delitto_e_castigo");
+        else if(i==9) 
+                addNodoLibro(rad,"il_trono_di_spade");
+        else if(i==10) 
+                addNodoLibro(rad,"hunger_games");
+        else if(i==11) 
+                addNodoLibro(rad,"i_miserabili");
+        else if(i==12) 
+                addNodoLibro(rad,"notre_dame_de_paris");
+        else if(i==13) 
+                addNodoLibro(rad,"il_codice_da_vinci");
+        else if(i==14)
+                addNodoLibro(rad,"i_tre_moschettieri");
+            
+        //int c=i+1;
+        //sprintf(stringabase,"%s%d","libro",c);
+        //addNodoLibro(rad,stringabase);
     }
     
 }
@@ -99,10 +130,32 @@ void initializeABRLibro(libro **rad){
 // funzione visita in preordine ABR Libri
 void visitaInPreordineLibro(libro *rad){
     if(rad){
-        printf("%s ",rad->nomeLibro);
+        printf("|%s| ",rad->nomeLibro);
         visitaInPreordineLibro(rad->sx);
         visitaInPreordineLibro(rad->dx);
     }
+}
+
+// funzione visita in preordine con output solo di libri in prestito
+void visitaInPreordineLibroInPrestito(libro *rad){
+    if(rad){
+        if(rad->prestito!=NULL)
+                printf("%s ->Matricola: %d %s \n",rad->nomeLibro,rad->prestito->matricola,rad->prestito->nomeStudente);
+        visitaInPreordineLibroInPrestito(rad->sx);
+        visitaInPreordineLibroInPrestito(rad->dx);
+    }
+}
+
+// funzione che restituisce il numero di libri in prestito
+int nPrestiti(libro *rad){
+    int count=0;
+    if(rad){
+        if(rad->prestito!=NULL)
+                count++;
+        count=count+nPrestiti(rad->sx);
+        count=count+nPrestiti(rad->dx);
+    }
+    return count;
 }
 
 // funzione ricerca libro con restituzione int
@@ -203,7 +256,6 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
     if(caso){
         strcpy(tipo,"prestito");
         printf("\nInserisci generalità studente ");
-        
         printf("\nNome: ");
         scanf("%s",nomeStudente);
         printf("\nMatricola: ");
@@ -213,7 +265,6 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
             printf("\nLo studente ha già fatto una richiesta di prestito,non è consentito effettuarne un altra...\toperazione annullata");
             return; // funzione gestioni errori?
         }
-
         printf("\nInserisci nome libro richiesto in prestito: ");
         scanf("%s",nomeObj);
         foundLib=ricercaLibro(*radLibro,nomeObj);
@@ -254,7 +305,7 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
 
     richiesta *request=addNodoRichiesta(tipo, refStud , refLib);    
     enQueue(coda, request);
-    printf("\n Operazione effettuata con successo! Gestiremo la richiesta il prima possibile...\n");
+    printf("\nOperazione effettuata con successo! Gestiremo la richiesta il prima possibile...\n");
 
 }
 
@@ -274,7 +325,7 @@ void enQueue(queue *coda,richiesta *nodo){
 // funzione iterativa per la stampa della coda
 void printQueue(queue *coda){
     richiesta *temp = coda->head;
-    printf("\n Coda richieste:\n");
+    printf("\n\tCoda richieste:\n");
     while(temp->next!=coda->head){
         printf("%s\t%d\t%s\n",temp->tipo,temp->richiedente->matricola,temp->oggetto->nomeLibro);
         temp=temp->next;

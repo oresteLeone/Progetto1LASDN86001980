@@ -1,7 +1,7 @@
 #ifndef projectlib
 #define projectlib
 #define maxlibri 15     //numero massimo libri 
-#define maxstring 20
+#define maxstring 30
 
 
 // Struttura nodi dell' ABR utilizzato per memorizzare gli studenti(matricola come chiave principale)
@@ -35,6 +35,7 @@ typedef struct queue_richieste{
     richiesta *tail;
 } queue;
 
+
 // funzione per aggiungere un nodo studente all'ABR dei studenti
 void addNodoStudente(studente **rad, int matr, char *nome );
 
@@ -52,6 +53,12 @@ void initializeABRLibro(libro **rad);
 
 // funzione visita in preordine ABR Libri
 void visitaInPreordineLibro(libro *rad);
+
+// funzione visita in preordine con output solo di libri in prestito
+void visitaInPreordineLibroInPrestito(libro *rad);
+
+// funzione che restituisce il numero di libri in prestito
+int nPrestiti(libro *rad);
 
 // funzione ricerca libro con restituzione int
 int ricercaLibro(libro *rad,char *nome);

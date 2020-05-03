@@ -52,3 +52,10 @@ uno studente può prendere solo un libro alla volta
 
 2 maggio
 finalmente funziona tutto, devo aggiungere il decodamento e pulire il codice e migliorarlo
+
+3 maggio
+tutto funzionante, devo ripulire e aggiungere delle utility
+bilanciamento degli alberi studente e libri Opzionale/non necessario
+la stampa dei libri mi deve restituire lo status di ogni libro (se sono in prestito e da chi) ( FATTO in una funzione apparte)
+dare ai libri un nome effettivo e non libro1 ecc...(FATTO)
+aggiungere controllo alla chiusura che tutti i libri siano stati riconsegnati (FATTO)

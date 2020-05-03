@@ -6,66 +6,93 @@
 
 int main(){
 
-    printf("\n dovrei inizializzare i libri \n");
-    
+    // inizializzazione ABR libri
+    printf("\nInizializzazione programma...");
     libro *radLibro = (libro *)malloc(sizeof(libro));
-    // inizializzo l'albero con la funzione initialize passando come argomento &rad poiché
-    // l'inserimento ricorsivo utilizza il doppio puntatore
+    radLibro=NULL;
     initializeABRLibro(&radLibro);
-    
-    // qui uso il puntatore singolo e quindi passo rad
-    visitaInPreordineLibro(radLibro);
 
+    // prima stampa per visualizzare all'utilizzatore
+    // l'elenco dei libri
+    printf("\nCatalogo libri:\n");
+    visitaInPreordineLibro(radLibro);
+    printf("\n***Fine Elenco***\n");
+
+    //inizializzazione Coda richieste
     queue *coda=(queue *)malloc(sizeof(queue));
     initializeQueue(coda);
 
+    // inizializzazione ABR Studenti
     studente *radStudente = (studente *)malloc(sizeof(studente));
     radStudente=NULL;
 
-    
-    int canIclose=1; // flag presenza richieste
+    // inizializzazione variabili d'ambiente
+    int prestiti=0;
+    int sospese=1;
+    int canIclose=0; // flag d'uscita
     int choice=-1;
+    
+    // menu interattivo
     do{
         printf("\n1. Aggiungere una richiesta ");
         printf("\n2. Gestire le richieste ");
+        printf("\n3. Stampa catalogo libri ");
+        printf("\n4. Stampa libri attualmente in prestito ");
         printf("\n0. Terminare ");
         printf("\n input: ");
             do{
                 scanf("%d",&choice);
-                if(choice<0 || choice>2)
+                if(choice<0 || choice>5)
                     printf(" Non valido!\n input: ");
-            }while(choice<0 || choice>2);
+            }while(choice<0 || choice>5);
 
-        printf("\n ho selezionato %d \n",choice);
 
         switch(choice){
             case 1:
-                printf("\n Aggiungere una richiesta (chiamo catch request\n");
+                printf("\n\tAggiungere una richiesta: \n");
                 catchRequest(&radStudente,&radLibro,coda);
+                printf("\n***Fine Operazione***\n");
                                
                 break;
             case 2:
-                printf("\n Gestire le richieste \n");
+                printf("\n\tGestire le richieste: \n");
                 if(!emptyQueue(coda)){
                     printf("\nCoda prima della gestione : ");
                     printQueue(coda);
                     tryRequest(coda,&radStudente);
-                    printf("\nCoda dopo della gestione : ");
+                    printf("\nCoda dopo la gestione : ");
                     if(!emptyQueue(coda)) 
                         printQueue(coda);
-                    else printf("\n VUOTA!");
+                    else 
+                        printf("\nNon ci sono ulteriori richieste!\n");
                 }else 
-                    printf("\n Non ci sono richieste!");
+                    printf("\nNon ci sono richieste!\n");
+                printf("\n***Fine Operazione***\n");
+                
+                break;
+            case 3:
+                printf("\nLibri in catalogo:\n");
+                visitaInPreordineLibro(radLibro);
+                printf("\n***Fine Elenco***\n");
+
+                break;
+            case 4:
+                printf("\nLibri attualmente in prestito: %d \n",prestiti=nPrestiti(radLibro));
+                visitaInPreordineLibroInPrestito(radLibro);
+                printf("\n***Fine Elenco***\n");
                 
                 break;
             case 0:
-                canIclose=emptyQueue(coda);
-                if(canIclose)
-                    printf("\n Arrivederci \n");
-                else
-                    printf("\n ci sono richieste in sospeso da gestire! \n");
-                
-            break;
+                sospese=emptyQueue(coda);
+                prestiti=nPrestiti(radLibro);
+                if(sospese && (prestiti==0)) {
+                        printf("\nChiusura programma in corso...\n");
+                        canIclose=1;
+                }else if(!sospese)
+                    printf("\nSono presenti richieste in sospeso da gestire! \n");
+                else if(prestiti!=0)
+                    printf("\nNon tutti i libri sono stati restituiti, prego sollecitare la restituzione!\n");
+                break;
         }
 
     }while( choice!=0 || canIclose!=1 );
