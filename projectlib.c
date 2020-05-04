@@ -123,22 +123,22 @@ void initializeABRLibro(libro **rad){
     
 }
 
-// funzione visita in preordine ABR Libri
-void visitaInPreordineLibro(libro *rad){
+// funzione visita in ordine ABR Libri
+void visitaInOrdineLibro(libro *rad){
     if(rad){
+        visitaInOrdineLibro(rad->sx);
         printf("|%s| ",rad->nomeLibro);
-        visitaInPreordineLibro(rad->sx);
-        visitaInPreordineLibro(rad->dx);
+        visitaInOrdineLibro(rad->dx);
     }
 }
 
-// funzione visita in preordine con output solo di libri in prestito
-void visitaInPreordineLibroInPrestito(libro *rad){
+// funzione visita in ordine con output solo di libri in prestito
+void visitaInOrdineLibroInPrestito(libro *rad){
     if(rad){
+        visitaInOrdineLibroInPrestito(rad->sx);
         if(rad->prestito!=NULL)
                 printf("%s ->Matricola: %d %s \n",rad->nomeLibro,rad->prestito->matricola,rad->prestito->nomeStudente);
-        visitaInPreordineLibroInPrestito(rad->sx);
-        visitaInPreordineLibroInPrestito(rad->dx);
+        visitaInOrdineLibroInPrestito(rad->dx);
     }
 }
 

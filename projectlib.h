@@ -59,11 +59,11 @@ void addNodoLibro(libro **rad, char *nome );
 // funzione inizializzazione ABR libri
 void initializeABRLibro(libro **rad);
 
-// funzione visita in preordine ABR Libri
-void visitaInPreordineLibro(libro *rad);
+// funzione visita in ordine ABR Libri
+void visitaInOrdineLibro(libro *rad);
 
-// funzione visita in preordine con output solo di libri in prestito
-void visitaInPreordineLibroInPrestito(libro *rad);
+// funzione visita in ordine con output solo di libri in prestito
+void visitaInOrdineLibroInPrestito(libro *rad);
 
 // funzione che restituisce il numero di libri in prestito
 int nPrestiti(libro *rad);

@@ -15,7 +15,7 @@ int main(){
     // prima stampa per visualizzare all'utilizzatore
     // l'elenco dei libri
     printf("\nCatalogo libri:\n");
-    visitaInPreordineLibro(radLibro);
+    visitaInOrdineLibro(radLibro);
     printf("\n***Fine Elenco***\n");
 
     //inizializzazione Coda richieste
@@ -74,13 +74,13 @@ int main(){
                 break;
             case 3:
                 printf("\nLibri in catalogo:\n");
-                visitaInPreordineLibro(radLibro);   // stampa in preordine ABR libri
+                visitaInOrdineLibro(radLibro);   // stampa in ordine ABR libri
                 printf("\n***Fine Elenco***\n");
 
                 break;
             case 4:
                 printf("\nLibri attualmente in prestito: %d \n",prestiti=nPrestiti(radLibro));
-                visitaInPreordineLibroInPrestito(radLibro); // stampa in preordine SOLO gli elementi con il prestito attivo
+                visitaInOrdineLibroInPrestito(radLibro); // stampa in ordine SOLO gli elementi con il prestito attivo
                 printf("\n***Fine Elenco***\n");
 
                 break;
