@@ -16,7 +16,7 @@ int main(){
     // l'elenco dei libri
     printf("\nCatalogo libri:\n");
     visitaInOrdineLibro(radLibro);
-    printf("\n***Fine Elenco***\n");
+    printf("\n***Fine Elenco***");
 
     //inizializzazione Coda richieste
     queue *coda=(queue *)malloc(sizeof(queue));
