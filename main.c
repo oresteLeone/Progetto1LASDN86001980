@@ -35,13 +35,14 @@ int main(){
 
     // menu interattivo
     do{
+        printf("\n*****\t Menu \t*****");
         printf("\n1. Aggiungere una richiesta ");
         printf("\n2. Gestire le richieste (%d)",lenghtCoda=lenghtQueue(coda,coda->head));
         printf("\n3. Stampa catalogo libri ");
         printf("\n4. Stampa libri attualmente in prestito (%d) ",prestiti=nPrestiti(radLibro));
         printf("\n0. Terminare ");
         printf("\n input: ");
-            do{
+            do{             //permette solo l'iserimento di valori compresi tra 0 e 4
                 scanf("%d",&choice);
                 if(choice<0 || choice>5)
                     printf(" Non valido!\n input: ");
@@ -51,19 +52,19 @@ int main(){
         switch(choice){
             case 1:
                 printf("\n\tAggiungere una richiesta: \n");
-                catchRequest(&radStudente,&radLibro,coda);
-                printf("\n***Fine Operazione***\n");
+                catchRequest(&radStudente,&radLibro,coda);  // Creazione della richiesta di prestito/restituzione
+                printf("\n***Fine Operazione***\n");        // ed immissione nella coda in attesa della gestione
                                
                 break;
             case 2:
-                printf("\n\tGestire le richieste: \n");
-                if(!emptyQueue(coda)){
-                    printf("\nCoda prima della gestione : \n");
-                    printQueue(coda,coda->head);
-                    tryRequest(coda,&radStudente);
+                printf("\n\tGestire le richieste: \n");     // stampa la situazione della coda prima della gestione
+                if(!emptyQueue(coda)){                      // del primo elemento e poi stampa la situzione successiva
+                    printf("\nCoda prima della gestione : \n"); 
+                    printQueue(coda,coda->head);        // stampa precedente
+                    tryRequest(coda,&radStudente);      // gestione richiesta in testa
                     printf("\nCoda dopo la gestione : \n");
                     if(!emptyQueue(coda)) 
-                        printQueue(coda,coda->head);
+                        printQueue(coda,coda->head);    // stampa successiva
                     else 
                         printf("\nNon ci sono ulteriori richieste!\n");
                 }else 
@@ -73,22 +74,22 @@ int main(){
                 break;
             case 3:
                 printf("\nLibri in catalogo:\n");
-                visitaInPreordineLibro(radLibro);
+                visitaInPreordineLibro(radLibro);   // stampa in preordine ABR libri
                 printf("\n***Fine Elenco***\n");
 
                 break;
             case 4:
                 printf("\nLibri attualmente in prestito: %d \n",prestiti=nPrestiti(radLibro));
-                visitaInPreordineLibroInPrestito(radLibro);
+                visitaInPreordineLibroInPrestito(radLibro); // stampa in preordine SOLO gli elementi con il prestito attivo
                 printf("\n***Fine Elenco***\n");
 
                 break;
             case 0:
-                sospese=emptyQueue(coda);
-                prestiti=nPrestiti(radLibro);
-                if(sospese && (prestiti==0)) {
+                sospese=emptyQueue(coda);       // gestione condizioni d'uscita del programma
+                prestiti=nPrestiti(radLibro);   // è consentita la chiusura solo se 
+                if(sospese && (prestiti==0)) {  // non ci sono richieste in sospeso e siano stati restituiti tutti i libri
                         printf("\nChiusura programma in corso...\n");
-                        canIclose=1;
+                        canIclose=1;        // a condizioni soddisfatte aggiorno la flag d'uscita
                 }else if(!sospese)
                     printf("\nSono presenti richieste in sospeso da gestire! \n");
                 else if(prestiti!=0)

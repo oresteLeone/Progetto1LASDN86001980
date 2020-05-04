@@ -87,8 +87,7 @@ void addNodoLibro(libro **rad, char *nome ){
 // funzione inizializzazione ABR libri
 void initializeABRLibro(libro **rad){
     int i=0;
-    // char stringabase[maxstring];
-    for(i=0;i<maxlibri;i++){
+    for(i=0;i<maxlibri;i++){    // immissione automatica di 15 libri qui definiti in stringhe
         if(i==0) 
                 addNodoLibro(rad,"harry_potter");
         else if(i==1) 
@@ -120,9 +119,6 @@ void initializeABRLibro(libro **rad){
         else if(i==14)
                 addNodoLibro(rad,"i_tre_moschettieri");
             
-        //int c=i+1;
-        //sprintf(stringabase,"%s%d","libro",c);
-        //addNodoLibro(rad,stringabase);
     }
     
 }
@@ -235,12 +231,13 @@ richiesta *addNodoRichiesta(char *tipo, studente *matricola, libro *oggetto ){
         temp->richiedente=matricola;
         temp->oggetto=oggetto;
         temp->next=NULL;
-    }else printf("\n Errore in allocazione Richiesta!");
+    }else printf("\nErrore in allocazione Richiesta!");
     return temp;
 }
 
 // funzione per l'impacchettamento e accodamento della richiesta
 void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
+    // inizializzazioni variabili locali
     int caso =-1;
     char tipo[maxstring];
     int matr;
@@ -248,53 +245,55 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
     char nomeObj[maxstring];
     int foundLib=0;
     int foundStud=0;
+
     printf("\nInserisci tipo richiesta (1.Prestito//0.Restituzione) ");
     do{
         scanf("%d",&caso);
             if(caso!=1 && caso !=0)     printf("\nPerfavore, inserisci 1 o 0; ");
     }while(caso!=1 && caso !=0);
-    if(caso){
+
+    if(caso){       // CASO PRESTITO
+        
         strcpy(tipo,"prestito");
-        printf("\nInserisci generalità studente ");
+        printf("\nInserisci dati studente ");
         printf("\nNome: ");
         scanf("%s",nomeStudente);
         printf("\nMatricola: ");
         scanf("%d",&matr);
-        foundStud=ricercaStudente(*radStudente,matr);
-        if(foundStud){
-            printf("\nLo studente ha già fatto una richiesta di prestito,non è consentito effettuarne un altra...\toperazione annullata");
-            return; // funzione gestioni errori?
+        foundStud=ricercaStudente(*radStudente,matr);   // Se lo studente è già presente nell'albero vuol dire 
+        if(foundStud){                                  // che ha già presentato una richiesta di prestito
+            printf("\nLo studente ha presentato in precedenza una richiesta di prestito,\nnon e' consentito effettuarne un altra...\toperazione annullata");
+            return; 
         }
         printf("\nInserisci nome libro richiesto in prestito: ");
         scanf("%s",nomeObj);
         foundLib=ricercaLibro(*radLibro,nomeObj);
-        if(foundLib){
+        if(foundLib){   // se il libro è presente, aggiungo il nodo dello studente
             printf("\nElaborazione dati ");
             addNodoStudente(radStudente,matr,nomeStudente);
             
         }else{
-            printf("\nIl libro richiesto non è presente in catalogo...\toperazione annullata");
-            return; // funzione gestione errori?
+            printf("\nIl libro richiesto non e' presente in catalogo...\toperazione annullata");
+            return; 
         }
-    }else{
+    }else{      // CASO RESTITUZIONE
+
         strcpy(tipo,"restituzione");
         printf("\nInserisci nome libro da restituire: ");
         scanf("%s",nomeObj);
         foundLib=ricercaLibro(*radLibro,nomeObj);
         if(!foundLib){
-            printf("\nIl libro presentato non è presente in catalogo...\toperazione annullata");
-            return; // funzione gestione errori?
+            printf("\nIl libro presentato non e' presente in catalogo...\toperazione annullata");
+            return; 
         }else 
             printf("\nElaborazione dati ");
             
-             
-
     }
-    libro *refLib=referenceLibro(*radLibro,nomeObj);
-    studente *refStud=NULL;
+    libro *refLib=referenceLibro(*radLibro,nomeObj);    // creo i puntatori di riferimento al libro e allo studente
+    studente *refStud=NULL;                             // in preparazione della richiesta
     if(strcmp(tipo,"restituzione")==0){
         if(refLib->prestito==NULL){
-            printf("\nAbbiamo già un libro con quel nome, quello presentato apparterrà ad altri...\toperazione annullata");
+            printf("\nIl libro presentato non appartiene a questa libreria in quanto e' ancora disponibile al prestito...\toperazione annullata");
             return;
             }else {
                 refStud=referenceStudente(*radStudente,refLib->prestito->matricola);
@@ -303,7 +302,7 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
         refStud=referenceStudente(*radStudente,matr);
     }
 
-    richiesta *request=addNodoRichiesta(tipo, refStud , refLib);    
+    richiesta *request=addNodoRichiesta(tipo, refStud , refLib);    // creo la richiesta e l'aggiungo alla coda
     enQueue(coda, request);
     printf("\nOperazione effettuata con successo! Gestiremo la richiesta il prima possibile...\n");
 
@@ -358,12 +357,16 @@ int lenghtQueue(queue *coda,richiesta *request){
 // funzione gestione richieste
 void tryRequest(queue *coda,studente **radStudente){
     richiesta *tmp=NULL;
-    if(strcmp(coda->head->tipo,"prestito")==0){
-        if(coda->head->oggetto->prestito==NULL){
-            coda->head->oggetto->prestito=coda->head->richiedente;
-            tmp=deQueue(coda);
-        }else{
-            printf("\nIl libro %s è stato già dato in prestito alla matricola %d... ",coda->head->oggetto->nomeLibro,coda->head->oggetto->prestito->matricola);
+
+    if(strcmp(coda->head->tipo,"prestito")==0){ // Se la richiesta è di PRESTITO
+
+        if(coda->head->oggetto->prestito==NULL){    // se il libro è disponibile
+            coda->head->oggetto->prestito=coda->head->richiedente;  // aggiorno la sua condizione col puntatore 
+            tmp=deQueue(coda);  // rimuovo la richiesta dalla coda
+
+        }else{  // se il libro NON è momentaneamente disponibile
+                // chiedo all'operatore se lo studente è disposto ad aspettare che ritorni disponibile
+            printf("\nIl libro %s e' attualmente in prestito alla matricola %d... ",coda->head->oggetto->nomeLibro,coda->head->oggetto->prestito->matricola);
             printf("\nLo studente desidera attendere che sia nuovamente disponibile?(1.SI 0.NO): ");
             int chc=-1;
             do{
@@ -371,18 +374,19 @@ void tryRequest(queue *coda,studente **radStudente){
                 if(chc!=1 && chc !=0)     printf("\nPerfavore, inserisci 1 o 0; ");
             }while(chc!=1 && chc !=0);
             tmp=deQueue(coda);
-            if(chc==1){
+            if(chc==1){     // Se vuole attendere lo inserisco in coda alla Queue
                 enQueue(coda,tmp);
-            }else if(chc==0){
+            }else if(chc==0){   // se non vuole attendere per poter richiedere un'altro libro
                 eliminaNodoABRStudente(radStudente,tmp->richiedente->matricola);
-                
+                // eliminando il nodo, lo studente è in grado di effettuare una nuova richiesta di prestito
             }
         }
-        
-    }else{
-        tmp=deQueue(coda);
+    }else{  // se la richiesta è di RESTITUZIONE
+
+        tmp=deQueue(coda);      // rimuovo dalla coda e aggiorno la disponibilità del libro
         tmp->oggetto->prestito=NULL;
-        eliminaNodoABRStudente(radStudente,tmp->richiedente->matricola);
+        eliminaNodoABRStudente(radStudente,tmp->richiedente->matricola); 
+        // rimuovo il nodo dello studente affinché possa effettuare nuove richieste di prestito
 
     }
 }

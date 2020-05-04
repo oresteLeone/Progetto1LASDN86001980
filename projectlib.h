@@ -1,13 +1,16 @@
 #ifndef projectlib
 #define projectlib
 #define maxlibri 15     //numero massimo libri 
-#define maxstring 30
+#define maxstring 30    //lunghezza massima stringhe
 
 
 // Struttura nodi dell' ABR utilizzato per memorizzare gli studenti(matricola come chiave principale)
 typedef struct nodoStudente {
+        // chiave primaria matricola come int
     int matricola;
+        // stringa del nome studente
     char nomeStudente[maxstring];
+        // puntatori al sottoalbero sinistro e destro
     struct nodoStudente *sx;
     struct nodoStudente *dx;
 } studente;
@@ -23,13 +26,18 @@ typedef struct nodoLibro{
     struct nodoLibro *dx;
 } libro;
 
+// Struttura nodi richieste
 typedef struct richiesta_libro{
+        // stringa contenente il tipo di richiesta (prestito/restituzione)
     char tipo[maxstring];
+        // puntatori allo studente e al libro coinvolti
     studente *richiedente;
     libro *oggetto;
+        // puntatore alla richiesta successiva nella coda
     struct richiesta_libro *next;
 } richiesta;
 
+// struttura coda che contiene le richieste
 typedef struct queue_richieste{
     richiesta *head;
     richiesta *tail;
