@@ -292,7 +292,7 @@ void catchRequest(studente **radStudente,libro **radLibro, queue *coda){
     libro *refLib=referenceLibro(*radLibro,nomeObj);    // creo i puntatori di riferimento al libro e allo studente
     studente *refStud=NULL;                             // in preparazione della richiesta
     if(strcmp(tipo,"restituzione")==0){
-        if(refLib->prestito==NULL){
+        if(refLib->prestito==NULL){         // se uno studente cerca di restituire un libro che però non è in prestito annulla l'operazione
             printf("\nIl libro presentato non appartiene a questa libreria in quanto e' ancora disponibile al prestito...\toperazione annullata");
             return;
             }else {
